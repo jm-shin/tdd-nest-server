@@ -4,8 +4,11 @@ import { DatabaseModule } from '../database/database.module';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { USER_REPOSITORY } from '../database/database.constants';
+import { lastValueFrom } from 'rxjs';
 
-const mockUserRepository = {};
+const mockUserRepository = {
+  findOne: jest.fn(),
+};
 
 describe('UserService', () => {
   let service: UserService;
@@ -33,5 +36,31 @@ describe('UserService', () => {
 
   it('should be defined userRepository', async () => {
     expect(userRepository).toBeDefined();
+  });
+
+  describe('findById', () => {
+    it('should return one result', async () => {
+      jest.spyOn(userRepository, 'findOne').mockResolvedValue({
+        id: 'user01',
+        password: '#####',
+        username: 'jm',
+        department: 'dev',
+        email: 'user01@example.com',
+      });
+
+      const foundUser = await lastValueFrom(service.findById('user01'));
+
+      expect(foundUser).toEqual({
+        id: 'user01',
+        password: '#####',
+        username: 'jm',
+        department: 'dev',
+        email: 'user01@example.com',
+      });
+      expect(userRepository.findOne).lastCalledWith({
+        where: { id: 'user01' },
+      });
+      expect(userRepository.findOne).toBeCalledTimes(1);
+    });
   });
 });
