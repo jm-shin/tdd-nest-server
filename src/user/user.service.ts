@@ -3,7 +3,7 @@ import { USER_REPOSITORY } from '../database/database.constants';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { EMPTY, from, mergeMap, Observable, of } from 'rxjs';
-import { throwIfEmpty } from 'rxjs/operators';
+import { map, throwIfEmpty } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
@@ -15,6 +15,12 @@ export class UserService {
     return from(this.userRepository.findOne({ where: { id } })).pipe(
       mergeMap((user) => (user ? of(user) : EMPTY)),
       throwIfEmpty(() => new NotFoundException(`user:${id} was not found`)),
+    );
+  }
+
+  existsById(id: string): Observable<boolean> {
+    return from(this.userRepository.count({ where: { id } })).pipe(
+      map((exists) => !!exists),
     );
   }
 }

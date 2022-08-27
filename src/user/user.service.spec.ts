@@ -8,6 +8,7 @@ import { lastValueFrom } from 'rxjs';
 
 const mockUserRepository = {
   findOne: jest.fn(),
+  count: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -61,6 +62,19 @@ describe('UserService', () => {
         where: { id: 'user01' },
       });
       expect(userRepository.findOne).toBeCalledTimes(1);
+    });
+  });
+
+  describe('existsById', () => {
+    it('should not exist return false', async () => {
+      jest.spyOn(userRepository, 'count').mockResolvedValueOnce(0);
+      const exists = await lastValueFrom(service.existsById('not_exist_user'));
+      expect(exists).toEqual(false);
+    });
+    it('should exist return true', async () => {
+      jest.spyOn(userRepository, 'count').mockResolvedValue(1);
+      const notExists = await lastValueFrom(service.existsById('exist_user'));
+      expect(notExists).toEqual(true);
     });
   });
 });
