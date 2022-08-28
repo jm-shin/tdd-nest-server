@@ -23,4 +23,13 @@ export class UserService {
       map((exists) => !!exists),
     );
   }
+
+  deleteById(id: string): Observable<any> {
+    return from(this.userRepository.delete({ id })).pipe(
+      map((result) => {
+        if (!result.affected)
+          throw new NotFoundException('delete id not found');
+      }),
+    );
+  }
 }

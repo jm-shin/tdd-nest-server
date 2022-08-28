@@ -5,10 +5,12 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { USER_REPOSITORY } from '../database/database.constants';
 import { lastValueFrom } from 'rxjs';
+import { NotFoundException } from "@nestjs/common";
 
 const mockUserRepository = {
   findOne: jest.fn(),
   count: jest.fn(),
+  delete: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -75,6 +77,27 @@ describe('UserService', () => {
       jest.spyOn(userRepository, 'count').mockResolvedValue(1);
       const notExists = await lastValueFrom(service.existsById('exist_user'));
       expect(notExists).toEqual(true);
+    });
+  });
+
+  describe('deleteById', () => {
+    it('should delete success', async () => {
+      jest.spyOn(userRepository, 'delete').mockResolvedValue({
+        affected: 1,
+        raw: 0,
+      });
+      const result = await lastValueFrom(service.deleteById('user01'));
+      expect(result).toEqual(undefined);
+    });
+
+    it('should delete fail', async () => {
+      jest.spyOn(userRepository, 'delete').mockResolvedValue({
+        affected: 0,
+        raw: 0,
+      });
+      await expect(
+        lastValueFrom(service.deleteById('user01')),
+      ).rejects.toThrowError(new NotFoundException('delete id not found'));
     });
   });
 });
