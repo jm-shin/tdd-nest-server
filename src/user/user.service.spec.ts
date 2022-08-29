@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { USER_REPOSITORY } from '../database/database.constants';
 import { lastValueFrom } from 'rxjs';
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common';
 
 const mockUserRepository = {
   findOne: jest.fn(),
