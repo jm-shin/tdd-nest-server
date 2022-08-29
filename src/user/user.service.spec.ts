@@ -100,4 +100,21 @@ describe('UserService', () => {
       ).rejects.toThrowError(new NotFoundException('delete id not found'));
     });
   });
+
+  describe('existsByEmail', () => {
+    it('should not exist return false', async () => {
+      jest.spyOn(userRepository, 'count').mockResolvedValueOnce(0);
+      const exists = await lastValueFrom(
+        service.existsByEmail('notExistUser@email.com'),
+      );
+      expect(exists).toEqual(false);
+    });
+    it('should exist return true', async () => {
+      jest.spyOn(userRepository, 'count').mockResolvedValue(1);
+      const notExists = await lastValueFrom(
+        service.existsByEmail('existUser@email.com'),
+      );
+      expect(notExists).toEqual(true);
+    });
+  });
 });

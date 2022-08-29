@@ -24,6 +24,12 @@ export class UserService {
     );
   }
 
+  existsByEmail(email: string): Observable<boolean> {
+    return from(this.userRepository.count({ where: { email } })).pipe(
+      map((exists) => !!exists),
+    );
+  }
+
   deleteById(id: string): Observable<any> {
     return from(this.userRepository.delete({ id })).pipe(
       map((result) => {
