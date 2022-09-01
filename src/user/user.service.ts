@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { EMPTY, from, mergeMap, Observable, of } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
+import { RegisterUserDto } from './register.user.dto';
 
 @Injectable()
 export class UserService {
@@ -37,5 +38,12 @@ export class UserService {
           throw new NotFoundException('delete id not found');
       }),
     );
+  }
+
+  async registerUser(data: RegisterUserDto): Promise<Partial<UserEntity>> {
+    const registerInfo = await UserEntity.create(data);
+    const registerUser = await this.userRepository.save(registerInfo);
+    delete registerUser['password'];
+    return registerUser;
   }
 }
