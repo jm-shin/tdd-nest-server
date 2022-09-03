@@ -1,10 +1,16 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { USER_REPOSITORY } from '../database/database.constants';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../database/user.entity';
 import { EMPTY, from, mergeMap, Observable, of } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
-import { RegisterUserDto } from './register.user.dto';
+import { RegisterUserDto } from './dto/register.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
 
 @Injectable()
 export class UserService {
@@ -45,5 +51,17 @@ export class UserService {
     const registerUser = await this.userRepository.save(registerInfo);
     delete registerUser['password'];
     return registerUser;
+  }
+
+  async updateUser(id: string, data: UpdateUserDto) {
+    const exists = await this.userRepository.count({ where: { id } });
+    if (exists) {
+      const updateInfo = await UserEntity.update(data);
+      await this.userRepository.update(id, { ...updateInfo }).catch(() => {
+        throw new BadRequestException('update data invalid');
+      });
+    } else {
+      throw new NotFoundException('update user id not found');
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from '../database/user.entity';
 import { from, Observable } from 'rxjs';
@@ -16,5 +16,10 @@ export class UserController {
         return user;
       }),
     );
+  }
+
+  @Delete(':id')
+  deleteUser(@Param('id') id: string): Observable<boolean> {
+    return from(this.userService.deleteById(id)).pipe();
   }
 }

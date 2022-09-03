@@ -1,7 +1,7 @@
 import { Body, ConflictException, Controller, Post } from '@nestjs/common';
 import { mergeMap } from 'rxjs';
 import { UserService } from './user.service';
-import { RegisterUserDto } from './register.user.dto';
+import { RegisterUserDto } from './dto/register.user.dto';
 
 @Controller('register')
 export class RegisterController {
