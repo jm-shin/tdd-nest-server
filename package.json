@@ -1,8 +1,8 @@
 {
   "name": "tdd-nest-server",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Practice Test-Driven Development with Nest.js",
+  "author": "jongmin shin",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
