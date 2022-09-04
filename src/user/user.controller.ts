@@ -1,8 +1,9 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from '../database/user.entity';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { UpdateUserDto } from './dto/update.user.dto';
 
 @Controller('user')
 export class UserController {
@@ -16,6 +17,11 @@ export class UserController {
         return user;
       }),
     );
+  }
+
+  @Put(':id')
+  putUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.userService.updateUser(id, body);
   }
 
   @Delete(':id')
