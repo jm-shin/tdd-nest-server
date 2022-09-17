@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 import { RegisterUserDto } from '../user/dto/register.user.dto';
-import { UpdateUserDto } from "../user/dto/update.user.dto";
+import { UpdateUserDto } from '../user/dto/update.user.dto';
 
 @Entity('user')
 export class UserEntity {
